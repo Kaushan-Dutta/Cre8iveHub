@@ -1,0 +1,39 @@
+{
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"sandboxnet": "access.sandboxnet.nodes.onflow.org:9000",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"contracts":{
+		"MyStore":"./cadence/MyStore.cdc"
+	},
+	"accounts": {
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "8a05e9a8ef075f45ee43df732aa4effdab0bddf3538c83152012b1ac5d6a7774"
+		},
+		"testnet-account":{
+			"address":"0xe980ac3a631ef292",
+			"key":{
+				"type":"hex",
+				"SignatureAlgorithm":"ECDSA_secp256k1",                
+                "Mnemonic":"unusual proud wave upper notice leader photo high marine yard leaf cabbage",
+				"privateKey":"67d53a2faeb8eb8909905adc2c762f3e0cd2be035380ab5a44697ba0eb8f5521",
+				"publicKey":" 3311edc858715044d05b2dd51f602d59877e4935d59d0accc48f8b8ad92a9fd7aace5daa161544b7dcbaf5a0db7f27fd9a4a5e473b80e5aaa9e179cd32c6ad5d"
+
+			}
+			
+      
+		}
+
+	},
+	"deployments":{
+		"testnet":{
+			"testnet-account":[
+				"MyStore"
+			]
+		}
+	}
+	
+}
