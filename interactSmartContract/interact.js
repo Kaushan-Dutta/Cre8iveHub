@@ -78,6 +78,9 @@ const interact = ({children}) => {
         const authorizations= [fcl.authz];
         const limit=999;
         const nft=await fcl.mutate({cadence,args, limit, proposer,authorizations})
+        console.log("========================",nft)
+        const { id, to} = nft;
+        
         return nft;
       }
       
@@ -261,8 +264,109 @@ const interact = ({children}) => {
         const price=await fcl.query({cadence,args})
         return price;
       }
+      const getAllNfts=async()=>{
+        const cadence=`
+        import MyStore from 0xe980ac3a631ef292
+        import NonFungibleToken from 0xe980ac3a631ef292
+        
+        pub struct NFT {
+        
+          pub let id:UInt64;
+          pub var price:UFix64;
+          pub var state:String;
+          pub var owner:Address;
+          pub let nft:&NonFungibleToken.NFT;
+        
+          init(id:UInt64,price:UFix64,state:String,owner:Address,nft:&NonFungibleToken.NFT){
+             self.id=id;self.price=price;self.state=state;self.owner=owner;self.nft=nft;
+          }
+        }
+        pub fun main():[NFT]{
+           let totalSupply=MyStore.totalSupply;
+           var NFTs:[NFT]=[]
+           var i:UInt64=0
+           while(i<totalSupply){
+              let owner=MyStore.owner[i]!
+              let response=getAccount(owner).getCapability(/public/Collection).borrow<&MyStore.Collection{NonFungibleToken.CollectionPublic}>() ?? panic("Not Found")
+        
+              let borrowNFT=response.borrowNFT(id:i) 
+        
+              let state=MyStore.state[i]!
+              
+              if(state=="OnSale"){
+                 let price=MyStore.price[i]!
+                 NFTs.append(NFT(id:i,price:price,state:state,owner:owner,nft:borrowNFT))
+              }
+              else{
+                   NFTs.append(NFT(id:i,price:0.0,state:state,owner:owner,nft:borrowNFT))
+              }
+              i=i+1
+        
+           }
+           return NFTs
+        }
+        
+        `
+        const args = (arg, t) => [];
+        console.log("Enter to Code")
+        const getNfts=await fcl.query({cadence,args})
+        return getNfts
+      }
+
+
+      const getCollectionNfts=async(addr)=>{
+        const cadence=`
+        import MyStore from 0xe980ac3a631ef292
+        import NonFungibleToken from 0xe980ac3a631ef292
+
+        pub struct NFT {
+
+          pub let id:UInt64;
+          pub var price:UFix64;
+          pub var state:String;
+          pub var owner:Address;
+          pub let nft:&NonFungibleToken.NFT;
+
+          init(id:UInt64,price:UFix64,state:String,owner:Address,nft:&NonFungibleToken.NFT){
+            self.id=id;self.price=price;self.state=state;self.owner=owner;self.nft=nft;
+          }
+        }
+        pub fun main(acc:Address):[NFT]{
+
+          let response=getAccount(acc).getCapability(/public/Collection).borrow<&MyStore.Collection{NonFungibleToken.CollectionPublic}>() ?? panic("Not Found")
+          let ids=response.getIDs()
+
+          var NFTs:[NFT]=[]
+          for i in ids{
+              let owner=MyStore.owner[i]!
+              let response=getAccount(owner).getCapability(/public/Collection).borrow<&MyStore.Collection{NonFungibleToken.CollectionPublic}>() ?? panic("Not Found")
+
+              let borrowNFT=response.borrowNFT(id:i) 
+
+              let state=MyStore.state[i]!
+              
+              if(state=="OnSale"){
+                let price=MyStore.price[i]!
+                NFTs.append(NFT(id:i,price:price,state:state,owner:owner,nft:borrowNFT))
+              }
+              else{
+                  NFTs.append(NFT(id:i,price:0.0,state:state,owner:owner,nft:borrowNFT))
+              }
+            
+
+          }
+          return NFTs
+        }
+
+        
+        `
+        const args = (arg, t) => [arg(addr, t.Address)];
+        console.log("Enter to Code")
+        const getNfts=await fcl.query({cadence,args})
+        return getNfts
+      }
     const value={
-        getFlowBalance,createCollection,listNFT,createNFT,marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice
+        getFlowBalance,createCollection,listNFT,createNFT,marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice,getAllNfts,getCollectionNfts
     }
     return (
         <Data.Provider value={value}>
@@ -276,3 +380,5 @@ export default interact
 export function cadenceCode(){
     return useContext(Data)
 }
+
+

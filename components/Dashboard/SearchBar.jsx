@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 
-const SearchBar = ({setSearchUser}) => {
+const SearchBar = ({setSearchUser,totalNFT}) => {
 
   const [search,setSearch]=useState();
 
@@ -12,7 +12,7 @@ const SearchBar = ({setSearchUser}) => {
                 setSearchUser(search)
             }}>SEARCH</button>
             <input type="text" className='w-4/5 text-black  px-5 py-2 rounded-md oswald' placeholder='TYPE THE ADDRESS' onChange={(e)=>{setSearch(e.target.value)}} value={search}/>
-            <p className='px-3 py-2 w-20 text-white bg-slate-400 rounded-sm oswald mx-3 text-sm'>23 <span>ITEMS</span></p>
+            <p className='px-3 py-2 w-20 text-white bg-slate-400 rounded-sm oswald mx-3 text-sm'>{totalNFT} <span>ITEMS</span></p>
     </div>
   )
 }

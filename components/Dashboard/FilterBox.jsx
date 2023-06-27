@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FilterBox = () => {
+const FilterBox = ({totalNFT}) => {
   return (
     <div className='text-white w-full  bg-slate-200 px-5 py-5 rounded-md my-5 flex flex-row justify-between items-center '>
             <button className=' py-2 w-20 text-white bg-slate-400 rounded-sm oswald mx-3'>SEARCH</button>
@@ -16,7 +16,7 @@ const FilterBox = () => {
                 </select>
 
             </div>
-             <p className='px-3 py-2 w-20 text-white bg-slate-400 rounded-sm oswald mx-3 text-sm'>23 <span>ITEMS</span></p>
+             <p className='px-3 py-2 w-20 text-white bg-slate-400 rounded-sm oswald mx-3 text-sm'>{totalNFT} <span>ITEMS</span></p>
     </div>
   )
 }

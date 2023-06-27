@@ -10,10 +10,10 @@ const Marketplace = () => {
   const {user, setUser, tools}=useUser();
 
   const {getFlowBalance,createCollection,listNFT,createNFT,
-    marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice
+    marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice,getAllNfts
                 }=cadenceCode();
 
-  const [totalNFT,setTotalNFT]=useState();
+  const [totalNFT,setTotalNFT]=useState(0);
   const [nfts,setNfts]=useState();
 
   useEffect(()=>{
@@ -21,7 +21,11 @@ const Marketplace = () => {
         try{
         const supply=await totalSupply();
         console.log(user.addr,supply)
-        setTotalNFT(supply);}
+        const getNfts= await getAllNfts();
+        
+        setTotalNFT(supply);
+        setNfts(getNfts);
+    }
         catch(err){
             console.log("Error",err)
         }
@@ -30,38 +34,12 @@ const Marketplace = () => {
      loadContents();
   },[])
 
-  useEffect(()=>{
-    const loadContents=async()=>{
-        let array=[]
-        const ids=totalNFT;
-        try{
-            for(let i=0;i<ids;i++){
-                const owner=await getOwner(i);
-                console.log(owner);
-                const nft= await marketplace(owner,i);
-                console.log(nft);
-                const state=await getState(i);
-                if(state=="OnSale"){
-                    const price=await getPrice(i);
-                    array.push({nft,state,price,owner});
-                }
-                array.push({nft,state,owner});
-                
-            }
-            setNfts(array)
-        }
-        catch(err){
-            console.log("Error in market",err);
-        }
-    }
-    loadContents();
-  },[totalNFT])
   
   
   const HeadingContent=()=>{return(
     <>
         <Heading name="Minted Content"/>
-        <FilterBox/>
+        <FilterBox totalNFT={totalNFT}/>
     </>
   )}
 

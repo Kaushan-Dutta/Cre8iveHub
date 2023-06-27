@@ -11,53 +11,34 @@ const Collection = () => {
 
 
   const {getFlowBalance,createCollection,listNFT,createNFT,
-        marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice
+        marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice,getCollectionNfts
                     }=cadenceCode();
 
   const [nfts,setNfts]=useState();
   const [searchUser,setSearchUser]=useState();
+  const [totalNFT,setTotalNFT]=useState(0);
 
   useEffect(()=>{
     const loadContents=async()=>{
         console.log("........--------------",searchUser);
         if(searchUser)
         {
-        const id=await getCollectionIds(searchUser);
-        console.log(id,id.length);
-        getNFTs(id);}
+        const getNfts= await getCollectionNfts(searchUser);
+        setTotalNFT(getNfts.length);
+        setNfts(getNfts);
+    }
         
     }
     loadContents();
   },[searchUser])
 
-  const getNFTs=async(id)=>{
-    let array=[];
-        try{
-        for(let i=0;i<id.length;i++){
-
-            const owner=await getOwner(i);
-            console.log(owner);
-            const nft= await marketplace(owner,id[i]);
-            const state=await getState(i);
-            if(state=="OnSale"){
-                const price=await getPrice(i);
-                array.push({nft:{nft},state,price});
-            }
-            else{
-            array.push({nft,state});}
-        }
-        setNfts(array);   }
-        catch(err){
-            console.log(err)
-        }
-  }
-
+  
   return (
     
     <div className=' overflow-y-scroll overflow-x-hidden scroll-smooth py-28 px-5 h-screen bg-black text-center w-full'>
         
         <Heading name="Collection"/>
-        <SearchBar setSearchUser={setSearchUser}/>
+        <SearchBar setSearchUser={setSearchUser} totalNFT={totalNFT}/>
         {nfts && 
         <div className='flex flex-row flex-wrap justify-center w-4/5 mx-auto text-center'>
             {nfts.map((object,id)=>{

@@ -3,13 +3,16 @@ import { ImCross } from 'react-icons/im';
 import {useDropzone} from 'react-dropzone'
 import { useUser } from '@/hooks/userAuth';
 import { cadenceCode } from '@/interactSmartContract/interact';
+import { useDatabase } from '@/interactDatabase/interact';
 import { Web3Storage, getFilesFromPath } from 'web3.storage'
 
 
 const Create = ({create,setCreate}) => {
 
   const {user, setUser, tools}=useUser();
+  const {createDoc,updateLike,updateComment,getDoc}=useDatabase();
   const {getFlowBalance,createCollection,listNFT,createNFT,marketplace,getCollectionIds,totalSupply,sendFlow}=cadenceCode();
+  
   const [video,setVideo]=useState();
   const [state,set]=useState({title:"",description:""});
  
@@ -46,6 +49,9 @@ const Create = ({create,setCreate}) => {
     try{
     const createNft=await createNFT(state.title,nftURI,user.addr);
     console.log(createNft);
+    const id=createNFT.id
+    const createItem=await createDoc(id,state.title,state.description,nftURI,Date.now())
+    console.log(createItem);
     setCreate(false);
     }
     catch(err){

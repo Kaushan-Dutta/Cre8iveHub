@@ -11,52 +11,28 @@ const MyNFTs = () => {
   const {user, setUser, tools}=useUser();
 
   const {getFlowBalance,createCollection,listNFT,createNFT,
-      marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice
+      marketplace,getCollectionIds,totalSupply,sendFlow,checkCollection,getOwner,getState,getPrice,getCollectionNfts
                   }=cadenceCode();
 
   const [list,setList]=useState(false);
-  const [ids,setIds]=useState();
+  const [ids,setIds]=useState([]);
   const [nfts,setNfts]=useState([]);
 
   useEffect(()=>{
      const loadContents=async()=>{
-        const id=await getCollectionIds(user.addr);
-        console.log(id,id.length);
-        setIds(id);
+        
+        const getNfts= await getCollectionNfts(user.addr);
+        setIds(getNfts.length);
 
+        setNfts(getNfts); 
      }
      loadContents();
   },[])
-  useEffect(()=>{
-
-    const loadContents=async()=>{
-        let array=[];
-        try{
-            for(let i=0;i<ids.length;i++){
-
-                
-                const nft= await marketplace(user.addr,ids[i]);
-                const state=await getState(i);
-                if(state=="OnSale"){
-                    const price=await getPrice(i);
-                    array.push({nft:{nft},state,price});
-                }
-                else{
-                array.push({nft,state});}
-            }
-            setNfts(array);   }
-        catch(err){
-            console.log(err)
-        } 
-    }
-        
-    loadContents();
-  },[ids])
-  
+    
   const HeadingContent=()=>{return(
     <>
         <Heading name="YOUR NFTs"/>
-        <FilterBox/>
+        <FilterBox totalNFT={ids}/>
     </>
         
   )}
@@ -70,12 +46,13 @@ const MyNFTs = () => {
                 return(
                     <div className='my-5'>
                     <NFT object={object} id={id}/>
-                    <button className='px-5 py-2 bg-green-500 rounded-sm text-white text-center oswald ' onClick={()=>{setList(true)}}>LIST ON SALE</button>
+                    {object.state=="NotSale" && <button className='px-5 py-2 bg-green-500 rounded-sm text-white text-center oswald ' onClick={()=>{setList(true)}}>LIST ON SALE</button>}
+                    {list && <ListNFT setList={setList} object={object}/>}
+
                     </div>
                 )
             })}            
         </div>
-        {list && <ListNFT setList={setList}/>}
         </div>}
     </div>
   )

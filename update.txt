@@ -1,0 +1,24 @@
+3.Create Datbase and store 
+
+  > uuid-id of nft
+  > description 
+  > name
+  > image ipfs url  
+  > likes 
+  > Comment 
+
+4.NFT IN CONTRACT
+
+  > id
+  > ipfs 
+  > name 
+  > date when created 
+  - price, sale type, owner
+
+4. Likes Creation 
+5. Top 3 NFT updation 
+6. NFT Minted on home page
+7. NFT description page
+8. Buying and sell nft 
+9. Comments
+//To be completed before 11 th july
