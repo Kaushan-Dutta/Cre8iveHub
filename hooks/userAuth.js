@@ -13,12 +13,13 @@ export default function UseCurrentUser({children}) {
 
   useEffect(() => {
  
-      fcl.currentUser().subscribe(newUser => {
+      /* fcl.currentUser().subscribe(newUser => {
         if (newUser?.loggedIn) {
           setUser(newUser)
         } else {
           setUser({loggedIn:false})
-        }})
+        }}) */
+      fcl.currentUser().subscribe(setUser);
   
   }, [setUser])
 

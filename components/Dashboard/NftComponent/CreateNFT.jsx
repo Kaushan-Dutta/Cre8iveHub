@@ -49,7 +49,8 @@ const Create = ({create,setCreate}) => {
     try{
     const createNft=await createNFT(state.title,nftURI,user.addr);
     console.log(createNft);
-    const id=createNFT.id
+    const id=createNft;
+    console.log(id);
     const createItem=await createDoc(id,state.title,state.description,nftURI,Date.now())
     console.log(createItem);
     setCreate(false);

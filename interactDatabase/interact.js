@@ -1,6 +1,8 @@
 import React,{useState,useContext,createContext,useEffect} from 'react'
 import {v4 as uuidv4} from 'uuid';
 import {databases} from './appwrite';
+import {  Query } from "appwrite";
+
 
 export const Data=createContext();
 const interact = ({children}) => {
@@ -33,11 +35,13 @@ const interact = ({children}) => {
         try{
            const promise = await databases.listDocuments(process.env.database_id, process.env.collection_id,
             [
-               Query.equal('uuid', uuid),
+               Query.equal('uuid',uuid),
             ])
-           console.log(promise);}
+            return(promise);
+           }
         catch(err){
-           console.log(err)}
+         console.log(err)
+           }
         
     }
     const value={createDoc,updateLike,updateComment,getDoc};

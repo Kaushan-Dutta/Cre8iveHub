@@ -79,9 +79,14 @@ const interact = ({children}) => {
         const limit=999;
         const nft=await fcl.mutate({cadence,args, limit, proposer,authorizations})
         console.log("========================",nft)
-        const { id, to} = nft;
+        const transaction = await fcl.tx(nft).onceSealed()
+        //console.log("//////////////////",transaction.events)
+        //console.log("//////////////////",transaction.events[0])
+        //console.log("//////////////////",transaction.events[0].data)
+
+        const id=transaction.events[0].data.id
         
-        return nft;
+        return id;
       }
       
       const listNFT=async(_id,_price)=>{
