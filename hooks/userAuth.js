@@ -19,7 +19,7 @@ export default function UseCurrentUser({children}) {
         } else {
           setUser({loggedIn:false})
         }}) */
-      fcl.currentUser().subscribe(setUser);
+      fcl.currentUser().subscribe(setUser)
   
   }, [setUser])
 
